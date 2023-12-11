@@ -31,7 +31,15 @@
                                 <a class="nav-link" href="register.php">Registrar Cobrador</a>
                             </li>
     
-                        <?php endif ?>
+                            <li class="nav-item">
+                <a class="nav-link" href="report_for_day.php">
+                    <i class="bi bi-person-plus"></i> Sacar Reporte por Día
+                </a>
+            </li>
+                 
+
+
+            <?php endif ?>
                         <li class="nav-item">
                             <a class="nav-link" href="logout.php">Logout</a>
                         </li>

@@ -22,6 +22,7 @@
                     <i class="bi bi-person-plus"></i> Registrar Cobrador
                 </a>
             </li>
+            
         </ul>
     </div>
 </aside>

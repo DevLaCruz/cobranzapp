@@ -23,18 +23,16 @@ $cobradores_statement = $conn->query("SELECT * FROM users WHERE role = 'cobrador
 $cobradores = $cobradores_statement->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Validar y procesar la asignación de usuarios al sector
-    if (!empty($_POST["cobradores"])) {
-        $cobradoresSeleccionados = $_POST["cobradores"];
+    // Validar y procesar la asignación de usuario al sector
+    if (!empty($_POST["cobrador_id"])) {
+        $cobrador_id = $_POST["cobrador_id"];
 
-        foreach ($cobradoresSeleccionados as $cobrador_id) {
-            $assignment_statement = $conn->prepare("INSERT INTO user_sector (user_id, sector_id) VALUES (:user_id, :sector_id)");
-            $assignment_statement->bindParam(":user_id", $cobrador_id);
-            $assignment_statement->bindParam(":sector_id", $sector_id);
-            $assignment_statement->execute();
-        }
+        $assignment_statement = $conn->prepare("INSERT INTO user_sector (user_id, sector_id) VALUES (:user_id, :sector_id)");
+        $assignment_statement->bindParam(":user_id", $cobrador_id);
+        $assignment_statement->bindParam(":sector_id", $sector_id);
+        $assignment_statement->execute();
 
-        $_SESSION["flash"] = ["message" => "Sector asignado a usuarios exitosamente."];
+        $_SESSION["flash"] = ["message" => "Sector asignado a usuario exitosamente."];
         header("Location: home.php");
         return;
     }
@@ -52,9 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <div class="card-body">
                     <form method="POST" action="assign_sector.php?sector_id=<?= $sector_id ?>">
                         <div class="mb-3 row">
-                            <label for="cobradores" class="col-md-4 col-form-label text-md-end">Cobradores</label>
+                            <label for="cobrador_id" class="col-md-4 col-form-label text-md-end">Cobrador</label>
                             <div class="col-md-6">
-                                <select multiple class="form-control" id="cobradores" name="cobradores[]">
+                                <select class="form-control" id="cobrador_id" name="cobrador_id">
                                     <?php foreach ($cobradores as $cobrador): ?>
                                         <option value="<?= $cobrador["id"] ?>"><?= $cobrador["name"] ?></option>
                                     <?php endforeach ?>
@@ -63,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div class="mb-3 row">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">Asignar Cobradores</button>
+                                <button type="submit" class="btn btn-primary">Asignar Cobrador</button>
                             </div>
                         </div>
                     </form>
