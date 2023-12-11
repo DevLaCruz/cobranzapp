@@ -24,17 +24,17 @@ $cobradores_statement = $conn->query("SELECT * FROM users WHERE role = 'cobrador
 $cobradores = $cobradores_statement->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (empty($_POST["name"]) || empty($_POST["phone_number"])) {
+    if (empty($_POST["name"]) || empty($_POST["city"])) {
         $error = "Please fill all the fields.";
-    } else if (strlen($_POST["phone_number"]) < 9) {
+    } else if (strlen($_POST["city"]) < 4) {
         $error = "Phone number must be at least 9 characters.";
     } else {
         $name = $_POST["name"];
-        $phone_number = $_POST["phone_number"];
+        $city = $_POST["city"];
 
-        $insert_statement = $conn->prepare("INSERT INTO sectors (name, phone_number) VALUES (:name, :phone_number)");
+        $insert_statement = $conn->prepare("INSERT INTO sectors (name, city) VALUES (:name, :city)");
         $insert_statement->bindParam(":name", $name);
-        $insert_statement->bindParam(":phone_number", $phone_number);
+        $insert_statement->bindParam(":city", $city);
         $insert_statement->execute();
 
         $sector_id = $conn->lastInsertId();
@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Asignar cobradores al sector
         if (!empty($_POST["cobradores"])) {
             foreach ($_POST["cobradores"] as $cobrador_id) {
-                $assignment_statement = $conn->prepare("INSERT INTO user_sector_assignment (user_id, sector_id) VALUES (:user_id, :sector_id)");
+                $assignment_statement = $conn->prepare("INSERT INTO user_sector(user_id, sector_id) VALUES (:user_id, :sector_id)");
                 $assignment_statement->bindParam(":user_id", $cobrador_id);
                 $assignment_statement->bindParam(":sector_id", $sector_id);
                 $assignment_statement->execute();
@@ -77,23 +77,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             </div>
                         </div>
                         <div class="mb-3 row">
-                            <label for="phone_number" class="col-md-4 col-form-label text-md-end">Número de Teléfono</label>
+                            <label for="city" class="col-md-4 col-form-label text-md-end">Ciudad</label>
                             <div class="col-md-6">
-                                <input id="phone_number" type="tel" class="form-control" name="phone_number" autocomplete="phone_number" autofocus>
+                                <input id="city" type="tel" class="form-control" name="city" autocomplete="city" autofocus>
                             </div>
                         </div>
-                        <?php if ($user_role === "admin"): ?>
-                            <div class="mb-3 row">
-                                <label for="cobradores" class="col-md-4 col-form-label text-md-end">Cobradores Asignados</label>
-                                <div class="col-md-6">
-                                    <select multiple class="form-control" id="cobradores" name="cobradores[]">
-                                        <?php foreach ($cobradores as $cobrador): ?>
-                                            <option value="<?= $cobrador["id"] ?>"><?= $cobrador["name"] ?></option>
-                                        <?php endforeach ?>
-                                    </select>
-                                </div>
-                            </div>
-                        <?php endif ?>
+                        
                         <div class="mb-3 row">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">Agregar Sector</button>

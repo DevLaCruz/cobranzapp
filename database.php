@@ -1,7 +1,7 @@
 <?php
 
 $host = "localhost";
-$database = "contacts_app";
+$database = "creditsapp";
 $user = "root";
 $password = "";
 
